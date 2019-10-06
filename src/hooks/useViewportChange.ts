@@ -11,15 +11,20 @@ const useViewportChange = (
 ) => {
   const handleWindowResize = useRef<(...args: any[]) => any>()
 
+  function handleResizeEvent() {
+    handleWindowResize.current()
+  }
+
   useEffect(() => {
     handleWindowResize.current = throttle(callback, throttleInterval)
   })
 
   useEffect(() => {
-    handleWindowResize.current()
-    window.addEventListener('resize', handleWindowResize.current)
-    return () =>
-      window.removeEventListener('resize', handleWindowResize.current)
+    handleResizeEvent()
+    window.addEventListener('resize', handleResizeEvent)
+    return () => {
+      window.removeEventListener('resize', handleResizeEvent)
+    }
   }, [])
 }
 
